@@ -17,6 +17,7 @@ from .protocol import (
     validate_patch,
 )
 from .snapshot_store import DEFAULT_SNAPSHOT, SnapshotStore
+from .supabase_store import SupabaseStore
 
 __all__ = [
     "DEFAULT_SNAPSHOT",
@@ -29,6 +30,7 @@ __all__ = [
     "StoreFacade",
     "StoreReadOnly",
     "StoreUnavailable",
+    "SupabaseStore",
     "ValidationError",
     "drop_tokens",
     "fields_of",
