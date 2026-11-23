@@ -75,10 +75,13 @@ class Item:
         }
 
     def to_public(self) -> dict[str, Any]:
-        """What the browser is allowed to see: no owner token."""
+        """What the browser sees: no owner token and no derived tokens.
+
+        Dropping `tokens` matters on the wire as well as in principle — a
+        275-item result set would otherwise carry a token list per item.
+        """
         row = self.to_row()
         row.pop("owner_token", None)
-        row["matched_tokens"] = list(self.tokens)
         return row
 
     @classmethod

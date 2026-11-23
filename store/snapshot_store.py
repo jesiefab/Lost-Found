@@ -37,18 +37,16 @@ class SnapshotStore:
     def __init__(
         self,
         rows: Iterable[Mapping[str, Any]] | None = None,
-        path: Path | str | None = None,
         *,
         writable: bool = True,
         reason: str = "offline demo",
     ) -> None:
         self.writable = writable
         self._reason = reason
-        self.path = Path(path) if path is not None else DEFAULT_SNAPSHOT
         self.meta: dict[str, Any] = {}
 
         if rows is None:
-            payload = json.loads(self.path.read_text(encoding="utf-8"))
+            payload = json.loads(DEFAULT_SNAPSHOT.read_text(encoding="utf-8"))
             rows = payload.get("rows") or []
             self.meta = {
                 key: payload.get(key) for key in ("seed_version", "seed", "count", "sha256")
@@ -77,8 +75,11 @@ class SnapshotStore:
             },
         }
 
-    def health(self) -> bool:
+    def health(self, force: bool = False) -> bool:
         return True
+
+    def probe(self, force: bool = False) -> dict:
+        return self.state
 
     def close(self) -> None:
         return None
@@ -105,22 +106,9 @@ class SnapshotStore:
         clean = validate_new(fields_of(item))
         item_id = self._next_id
         self._next_id += 1
-        created = Item(
-            id=item_id,
-            kind=clean["kind"],
-            title=clean["title"],
-            description=clean["description"],
-            category=clean["category"],
-            location=clean["location"],
-            date_iso=clean["date_iso"],
-            status=clean["status"],
-            reporter=clean["reporter"],
-            tags=clean["tags"],
-            is_sample=bool(item.is_sample),
-            owner_token=item.owner_token,
-        )
-        self._items[item_id] = drop_tokens(created)
-        return self._items[item_id]
+        created = drop_tokens(replace(item, id=item_id, **clean))
+        self._items[item_id] = created
+        return created
 
     def update(
         self, item_id: int, changes: Mapping[str, Any], owner_token: str

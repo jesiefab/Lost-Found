@@ -113,7 +113,6 @@ class SupabaseStore:
         self._table = table_name
         self._reason = reason
         self.last_error = ""
-        self.calls = 0
 
     @classmethod
     def from_env(cls, *, timeout: float = DEFAULT_TIMEOUT) -> "SupabaseStore":
@@ -145,8 +144,6 @@ class SupabaseStore:
             "writable": self.writable,
             "configured": self.configured,
             "reason": self._reason,
-            "table": self._table,
-            "calls": self.calls,
             "last_error": self.last_error,
         }
 
@@ -159,7 +156,6 @@ class SupabaseStore:
     def _table_client(self):
         if self._client is None:
             raise StoreUnavailable(self._reason or "Supabase is not configured")
-        self.calls += 1
         return self._client.table(self._table)
 
     def _guard(self, operation: Callable[[], Any]) -> Any:
@@ -203,7 +199,7 @@ class SupabaseStore:
 
         return self._guard(operation)
 
-    def health(self) -> bool:
+    def health(self, force: bool = False) -> bool:
         """One cheap real query. Costs the same transport as a read, so a
         paused project and a broken read agree — which is the point."""
 
@@ -212,6 +208,10 @@ class SupabaseStore:
             return response is not None and getattr(response, "data", None) is not None
 
         return self._guard(operation)
+
+    def probe(self, force: bool = False) -> dict:
+        self.health(force=force)
+        return self.state
 
     # -- writes ----------------------------------------------------------
     def insert(self, item: Item) -> Item:
