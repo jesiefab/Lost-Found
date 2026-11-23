@@ -180,7 +180,9 @@ function renderStore(store) {
 
 function renderResults(payload) {
   els.results.replaceChildren();
-  els.count.textContent = payload.count;
+  // Header "N items" is the board, not the hit count: after a 2-hit query the
+  // header used to read "2 items" while the corpus was 501.
+  els.count.textContent = payload.corpus_size ?? payload.count;
   els.resultsCount.textContent = `${payload.count} ${payload.count === 1 ? "result" : "results"}`;
 
   if (!payload.count) {

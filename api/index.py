@@ -230,4 +230,7 @@ def home():
 
 @app.get("/<path:asset>")
 def static_asset(asset: str):
-    return send_from_directory(PUBLIC, asset, max_age=3600)
+    # max_age=0, not an hour: with a fresh hour of cache the browser ran the
+    # previous app.js after an edit, and would serve a stale board after a fix.
+    # The ETag still keeps the repeat load a 304.
+    return send_from_directory(PUBLIC, asset, max_age=0)
