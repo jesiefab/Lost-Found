@@ -402,7 +402,9 @@ class SearchEngine:
         mismatches: list[dict] = []
         compared = 0
         for query in queries:
-            result = self.search(query, timing_runs=3)
+            # The audit compares id sets; the timing runs a search needs for its
+            # panel buy it nothing and cost 8 path executions per query.
+            result = self.search(query, timing_runs=1)
             if result.mode != "search" or result.equal is None:
                 continue
             compared += 1
