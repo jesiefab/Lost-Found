@@ -1,254 +1,228 @@
 <!doctype html>
 <html lang="en" class="h-full">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lost &amp; Found — indexed search</title>
-    <link rel="stylesheet" href="/styles.css" />
-  </head>
-  <body class="min-h-full bg-slate-50 text-slate-900 antialiased">
-    <header class="border-b border-slate-200 bg-white">
-      <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
-        <h1 class="text-lg font-semibold tracking-tight">Lost &amp; Found</h1>
-        <span
-          id="store-badge"
-          class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700"
-          >source: …</span
-        >
-        <span id="store-detail" class="text-xs text-slate-500"></span>
-        <button
-          id="retry-db"
-          type="button"
-          class="hidden rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-900 hover:bg-amber-100"
-        >
-          retry database
-        </button>
 
-        <span class="ml-auto text-xs text-slate-500"
-          ><span id="item-count" class="font-mono tabular-nums">0</span> items</span
-        >
-        <button
-          id="clear-samples"
-          type="button"
-          class="rounded-md border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100"
-        >
-          Clear sample rows
-        </button>
-        <button
-          id="open-report"
-          type="button"
-          class="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"
-        >
-          + Report
-        </button>
-      </div>
-    </header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lost &amp; Found — indexed search</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
 
-    <section class="mx-auto max-w-7xl px-4 pt-4">
-      <div class="flex flex-wrap items-center gap-2">
-        <label class="sr-only" for="search">Search</label>
-        <input
-          id="search"
-          type="search"
-          autocomplete="off"
-          placeholder="payong, carved handle, cellphone…"
-          class="field w-full max-w-md"
-        />
-        <label class="sr-only" for="category">Category</label>
-        <select id="category" class="field">
-          <option value="">any category</option>
-          <option value="umbrella">umbrella</option>
-          <option value="phone">phone</option>
-          <option value="id">id</option>
-          <option value="bag">bag</option>
-          <option value="paper">paper</option>
-          <option value="other">other</option>
-        </select>
-        <label class="sr-only" for="status">Status</label>
-        <select id="status" class="field">
-          <option value="">any status</option>
-          <option value="open">open</option>
-          <option value="claimed">claimed</option>
-          <option value="returned">returned</option>
-        </select>
-        <label class="sr-only" for="from">From date</label>
-        <input id="from" type="date" class="field" />
-        <label class="sr-only" for="to">To date</label>
-        <input id="to" type="date" class="field" />
-      </div>
+<body class="min-h-full bg-slate-50 text-slate-900 antialiased">
+  <header class="sticky top-0 z-40 border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
+      <h1 class="text-lg font-semibold tracking-tight">Lost &amp; Found</h1>
+      <span id="store-badge" class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">source:
+        …</span>
+      <span id="store-detail" class="text-xs text-slate-500"></span>
+      <button id="retry-db" type="button"
+        class="hidden rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-900 hover:bg-amber-100">
+        retry database
+      </button>
 
-      <div id="chips" class="mt-3 flex flex-wrap gap-2">
-        <button type="button" data-q="payong" class="chip">payong</button>
-        <button type="button" data-q="payo" class="chip">payo</button>
-        <button type="button" data-q="pa" class="chip chip-warn" title="worst case: matches most of the vocabulary">
-          pa ⚠ worst case
-        </button>
-        <button type="button" data-q="carved handle" class="chip">carved handle</button>
-        <button type="button" data-q="cellphone" class="chip">cellphone</button>
+      <span class="ml-auto text-xs text-slate-500"><span id="item-count" class="font-mono tabular-nums">0</span>
+        items</span>
+      <button id="clear-samples" type="button"
+        class="rounded-md border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-100">
+        Clear sample rows
+      </button>
+      <button id="open-report" type="button"
+        class="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700">
+        + Report
+      </button>
+    </div>
+  </header>
+
+  <section class="mx-auto max-w-7xl px-4 pt-4">
+    <div class="flex flex-wrap items-center gap-2">
+      <label class="sr-only" for="search">Search</label>
+      <input id="search" type="search" autocomplete="off" placeholder="payong, carved handle, cellphone…"
+        class="field w-full max-w-md" />
+      <label class="sr-only" for="category">Category</label>
+      <select id="category" class="field">
+        <option value="">any category</option>
+        <option value="umbrella">umbrella</option>
+        <option value="phone">phone</option>
+        <option value="id">id</option>
+        <option value="bag">bag</option>
+        <option value="paper">paper</option>
+        <option value="other">other</option>
+      </select>
+      <label class="sr-only" for="status">Status</label>
+      <select id="status" class="field">
+        <option value="">any status</option>
+        <option value="open">open</option>
+        <option value="claimed">claimed</option>
+        <option value="returned">returned</option>
+      </select>
+      <label class="sr-only" for="from">From date</label>
+      <input id="from" type="date" class="field" />
+      <label class="sr-only" for="to">To date</label>
+      <input id="to" type="date" class="field" />
+    </div>
+
+    <div id="chips" class="mt-3 flex flex-wrap gap-2">
+      <button type="button" data-q="payong" class="chip">payong</button>
+      <button type="button" data-q="payo" class="chip">payo</button>
+      <button type="button" data-q="pa" class="chip chip-warn" title="worst case: matches most of the vocabulary">
+        pa ⚠ worst case
+      </button>
+      <button type="button" data-q="carved handle" class="chip">carved handle</button>
+      <button type="button" data-q="cellphone" class="chip">cellphone</button>
+    </div>
+  </section>
+
+  <main class="mx-auto grid max-w-7xl gap-4 px-4 py-4 lg:grid-cols-[15rem_minmax(0,1fr)_23rem]">
+    <aside class="order-2 lg:order-1">
+      <h2 class="panel-label mb-2">suggestions</h2>
+      <div id="suggestions" class="space-y-0.5 text-sm text-slate-500">
+        type to see suggestions
       </div>
+    </aside>
+
+    <section class="order-1 min-w-0 lg:order-2">
+      <div class="mb-2 flex flex-wrap items-baseline gap-x-2">
+        <h2 class="panel-label">results</h2>
+        <span id="results-count" class="text-sm font-semibold">0 results</span>
+        <span id="results-note" class="text-xs text-slate-500"></span>
+      </div>
+      <div id="results" class="space-y-2" aria-live="polite"></div>
     </section>
 
-    <main class="mx-auto grid max-w-7xl gap-4 px-4 py-4 lg:grid-cols-[15rem_minmax(0,1fr)_23rem]">
-      <aside class="order-2 lg:order-1">
-        <h2 class="panel-label mb-2">suggestions</h2>
-        <div id="suggestions" class="space-y-0.5 text-sm text-slate-500">
-          type to see suggestions
-        </div>
-      </aside>
+    <aside class="order-3">
+      <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+        <h2 class="panel-label mb-2">algorithms</h2>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="panel-label text-left">
+              <th class="font-normal">path</th>
+              <th class="text-right font-normal">items</th>
+              <th class="text-right font-normal">compute</th>
+            </tr>
+          </thead>
+          <tbody class="font-mono tabular-nums">
+            <tr>
+              <td class="py-0.5">indexed</td>
+              <td id="panel-indexed-exam" class="text-right">—</td>
+              <td id="panel-indexed-ms" class="text-right">—</td>
+            </tr>
+            <tr>
+              <td class="py-0.5">linear</td>
+              <td id="panel-linear-exam" class="text-right">—</td>
+              <td id="panel-linear-ms" class="text-right">—</td>
+            </tr>
+            <tr class="border-t border-slate-200">
+              <td class="pt-1">ratio</td>
+              <td id="panel-ratio-items" class="pt-1 text-right">—</td>
+              <td id="panel-ratio-time" class="pt-1 text-right">—</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <section class="order-1 min-w-0 lg:order-2">
-        <div class="mb-2 flex flex-wrap items-baseline gap-x-2">
-          <h2 class="panel-label">results</h2>
-          <span id="results-count" class="text-sm font-semibold">0 results</span>
-          <span id="results-note" class="text-xs text-slate-500"></span>
-        </div>
-        <div id="results" class="space-y-2" aria-live="polite"></div>
-      </section>
+        <p id="panel-equal" class="mt-3 rounded-md bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600">
+          waiting for a query
+        </p>
 
-      <aside class="order-3">
-        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
-          <h2 class="panel-label mb-2">algorithms</h2>
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="panel-label text-left">
-                <th class="font-normal">path</th>
-                <th class="text-right font-normal">items</th>
-                <th class="text-right font-normal">compute</th>
-              </tr>
-            </thead>
-            <tbody class="font-mono tabular-nums">
-              <tr>
-                <td class="py-0.5">indexed</td>
-                <td id="panel-indexed-exam" class="text-right">—</td>
-                <td id="panel-indexed-ms" class="text-right">—</td>
-              </tr>
-              <tr>
-                <td class="py-0.5">linear</td>
-                <td id="panel-linear-exam" class="text-right">—</td>
-                <td id="panel-linear-ms" class="text-right">—</td>
-              </tr>
-              <tr class="border-t border-slate-200">
-                <td class="pt-1">ratio</td>
-                <td id="panel-ratio-items" class="pt-1 text-right">—</td>
-                <td id="panel-ratio-time" class="pt-1 text-right">—</td>
-              </tr>
-            </tbody>
-          </table>
+        <p id="panel-index" class="mt-2 font-mono text-[11px] leading-relaxed text-slate-500"></p>
 
-          <p
-            id="panel-equal"
-            class="mt-3 rounded-md bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600"
-          >
-            waiting for a query
-          </p>
+        <div id="panel-diagnostics" class="mt-2 space-y-0.5"></div>
+        <p class="mt-2 text-[10px] uppercase tracking-wider text-slate-400">
+          per-path diagnostics — not cross-comparable
+        </p>
 
-          <p id="panel-index" class="mt-2 font-mono text-[11px] leading-relaxed text-slate-500"></p>
+        <p id="round-trip" class="mt-3 border-t border-slate-200 pt-2 font-mono text-[11px] text-slate-500">
+          round trip —
+        </p>
+      </div>
+    </aside>
+  </main>
 
-          <div id="panel-diagnostics" class="mt-2 space-y-0.5"></div>
-          <p class="mt-2 text-[10px] uppercase tracking-wider text-slate-400">
-            per-path diagnostics — not cross-comparable
-          </p>
+  <dialog id="report-dialog"
+    class="w-full max-w-lg rounded-xl border border-slate-200 p-0 shadow-xl backdrop:bg-slate-900/40">
+    <form id="report-form" class="space-y-3 p-5">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-semibold">Report an item</h2>
+        <button type="button" id="close-report"
+          class="rounded border border-slate-300 px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-100">
+          close
+        </button>
+      </div>
 
-          <p id="round-trip" class="mt-3 border-t border-slate-200 pt-2 font-mono text-[11px] text-slate-500">
-            round trip —
-          </p>
-        </div>
-      </aside>
-    </main>
-
-    <dialog
-      id="report-dialog"
-      class="w-full max-w-lg rounded-xl border border-slate-200 p-0 shadow-xl backdrop:bg-slate-900/40"
-    >
-      <form id="report-form" class="space-y-3 p-5">
-        <div class="flex items-center justify-between">
-          <h2 class="text-base font-semibold">Report an item</h2>
-          <button
-            type="button"
-            id="close-report"
-            class="rounded border border-slate-300 px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-100"
-          >
-            close
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <label class="block text-xs font-medium text-slate-600">
-            kind
-            <select name="kind" class="field mt-1 w-full" required>
-              <option value="lost">lost</option>
-              <option value="found">found</option>
-            </select>
-          </label>
-          <label class="block text-xs font-medium text-slate-600">
-            category
-            <select name="category" class="field mt-1 w-full">
-              <option value="umbrella">umbrella</option>
-              <option value="phone">phone</option>
-              <option value="id">id</option>
-              <option value="bag">bag</option>
-              <option value="paper">paper</option>
-              <option value="other" selected>other</option>
-            </select>
-          </label>
-        </div>
-
+      <div class="grid grid-cols-2 gap-3">
         <label class="block text-xs font-medium text-slate-600">
-          title
-          <input name="title" class="field mt-1 w-full" maxlength="160" required
-            placeholder="Black umbrella, wooden handle" />
+          kind
+          <select name="kind" class="field mt-1 w-full" required>
+            <option value="lost">lost</option>
+            <option value="found">found</option>
+          </select>
         </label>
-
         <label class="block text-xs font-medium text-slate-600">
-          description
-          <textarea name="description" rows="3" class="field mt-1 w-full"
-            placeholder="nawala ko payong ko mga mare, naiwan ata sa covered court"></textarea>
+          category
+          <select name="category" class="field mt-1 w-full">
+            <option value="umbrella">umbrella</option>
+            <option value="phone">phone</option>
+            <option value="id">id</option>
+            <option value="bag">bag</option>
+            <option value="paper">paper</option>
+            <option value="other" selected>other</option>
+          </select>
         </label>
+      </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <label class="block text-xs font-medium text-slate-600">
-            location
-            <input name="location" class="field mt-1 w-full" placeholder="covered court, bench 3" />
-          </label>
-          <label class="block text-xs font-medium text-slate-600">
-            date
-            <input name="date_iso" type="date" class="field mt-1 w-full" required />
-          </label>
-        </div>
+      <label class="block text-xs font-medium text-slate-600">
+        title
+        <input name="title" class="field mt-1 w-full" maxlength="160" required
+          placeholder="Black umbrella, wooden handle" />
+      </label>
 
-        <div class="grid grid-cols-2 gap-3">
-          <label class="block text-xs font-medium text-slate-600">
-            reporter
-            <input name="reporter" class="field mt-1 w-full" placeholder="your name or handle" />
-          </label>
-          <label class="block text-xs font-medium text-slate-600">
-            tags (comma separated)
-            <input name="tags" class="field mt-1 w-full" placeholder="urgent, may reward" />
-          </label>
-        </div>
+      <label class="block text-xs font-medium text-slate-600">
+        description
+        <textarea name="description" rows="3" class="field mt-1 w-full"
+          placeholder="nawala ko payong ko mga mare, naiwan ata sa covered court"></textarea>
+      </label>
 
-        <p id="report-error" class="hidden rounded-md bg-red-50 px-2.5 py-1.5 text-xs text-red-800"></p>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="block text-xs font-medium text-slate-600">
+          location
+          <input name="location" class="field mt-1 w-full" placeholder="covered court, bench 3" />
+        </label>
+        <label class="block text-xs font-medium text-slate-600">
+          date
+          <input name="date_iso" type="date" class="field mt-1 w-full" required />
+        </label>
+      </div>
 
-        <div class="flex justify-end gap-2 pt-1">
-          <button
-            type="button"
-            id="cancel-report"
-            class="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
-          >
-            cancel
-          </button>
-          <button
-            type="submit"
-            class="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"
-          >
-            Report item
-          </button>
-        </div>
-      </form>
-    </dialog>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="block text-xs font-medium text-slate-600">
+          reporter
+          <input name="reporter" class="field mt-1 w-full" placeholder="your name or handle" />
+        </label>
+        <label class="block text-xs font-medium text-slate-600">
+          tags (comma separated)
+          <input name="tags" class="field mt-1 w-full" placeholder="urgent, may reward" />
+        </label>
+      </div>
 
-    <div id="toast" hidden class="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg"></div>
+      <p id="report-error" class="hidden rounded-md bg-red-50 px-2.5 py-1.5 text-xs text-red-800"></p>
 
-    <script src="/app.js" defer></script>
-  </body>
+      <div class="flex justify-end gap-2 pt-1">
+        <button type="button" id="cancel-report"
+          class="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100">
+          cancel
+        </button>
+        <button type="submit"
+          class="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700">
+          Report item
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" hidden
+    class="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg">
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+
 </html>
