@@ -494,9 +494,13 @@ def report(rows: list[dict]) -> None:
 
 def push(rows: list[dict]) -> int:
     url = os.environ.get("SUPABASE_URL")
-    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    key = os.environ.get("SUPABASE_SECRET_KEY") or os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
     if not url or not key:
-        print("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set to push.", file=sys.stderr)
+        print(
+            "SUPABASE_URL and SUPABASE_SECRET_KEY (or SUPABASE_SERVICE_ROLE_KEY) "
+            "must be set to push.",
+            file=sys.stderr,
+        )
         return 2
     try:
         from supabase import create_client

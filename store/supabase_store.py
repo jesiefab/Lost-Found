@@ -37,6 +37,22 @@ from .protocol import (
 DEFAULT_TIMEOUT = 5.0
 DEFAULT_TABLE = "items"
 
+
+def credentials() -> tuple[str, str]:
+    """The server key, under either name Supabase has shipped it as.
+
+    Newer projects issue `sb_secret_…` as `SUPABASE_SECRET_KEY`; older ones a
+    service-role JWT as `SUPABASE_SERVICE_ROLE_KEY`. Both authenticate the same
+    way, so read whichever the project was set up with.
+    """
+    url = (os.environ.get("SUPABASE_URL") or "").strip()
+    key = (
+        os.environ.get("SUPABASE_SECRET_KEY")
+        or os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+        or ""
+    ).strip()
+    return url, key
+
 # Codes that are the caller's fault rather than the database's.
 _CONSTRAINT_PREFIXES = ("22", "23")  # data exception, integrity violation
 _QUERY_PREFIX = "PGRST1"  # PostgREST query-parse error: our bug, not an outage
@@ -121,13 +137,12 @@ class SupabaseStore:
         Missing configuration degrades to the snapshot like any outage; it must
         not stop the app from booting into its fallback.
         """
-        url = (os.environ.get("SUPABASE_URL") or "").strip()
-        key = (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or "").strip()
+        url, key = credentials()
         if not url or not key:
             return cls(
                 None,
                 reason="Supabase is not configured: set SUPABASE_URL and "
-                "SUPABASE_SERVICE_ROLE_KEY",
+                "SUPABASE_SECRET_KEY (or the older SUPABASE_SERVICE_ROLE_KEY)",
             )
         client, http_client = _build_client(url, key, timeout)
         return cls(client, http_client=http_client)
